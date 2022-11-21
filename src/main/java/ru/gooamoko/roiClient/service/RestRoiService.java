@@ -2,6 +2,7 @@ package ru.gooamoko.roiClient.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Service;
 import ru.gooamoko.roiClient.client.RoiClient;
 import ru.gooamoko.roiClient.entity.PetitionEntity;
@@ -37,6 +38,14 @@ public class RestRoiService implements RoiService {
                 PetitionEntity newEntity = createEntity(model);
                 repository.save(newEntity);
                 recordsAdded += 1;
+
+                // Получаем текст инициативы
+                HttpEntity<String> petition = roiClient.getPetition(newEntity.getId());
+                if (petition.hasBody()) {
+                    String petitionText = petition.getBody();
+                    log.info(petitionText);
+                    // TODO: 21.11.2022 Сохранить в сервис
+                }
             }
         }
         log.info("Добавлено инициатив в БД: {}.", recordsAdded);
