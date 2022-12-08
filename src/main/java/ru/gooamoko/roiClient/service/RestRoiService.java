@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Service;
 import ru.gooamoko.roiClient.client.RoiClient;
+import ru.gooamoko.roiClient.client.RoiServiceClient;
 import ru.gooamoko.roiClient.entity.PetitionEntity;
 import ru.gooamoko.roiClient.model.LevelModel;
 import ru.gooamoko.roiClient.model.PetitionListDataModel;
@@ -19,10 +20,12 @@ import java.util.Optional;
 public class RestRoiService implements RoiService {
     private final static Logger log = LoggerFactory.getLogger(RestRoiService.class);
     private final RoiClient roiClient;
+    private final RoiServiceClient roiServiceClient;
     private final PetitionRepository repository;
 
-    public RestRoiService(RoiClient roiClient, PetitionRepository repository) {
+    public RestRoiService(RoiClient roiClient, RoiServiceClient roiServiceClient, PetitionRepository repository) {
         this.roiClient = roiClient;
+        this.roiServiceClient = roiServiceClient;
         this.repository = repository;
     }
 
@@ -44,7 +47,7 @@ public class RestRoiService implements RoiService {
                 if (petition.hasBody()) {
                     String petitionText = petition.getBody();
                     log.info(petitionText);
-                    // TODO: 21.11.2022 Сохранить в сервис
+                    roiServiceClient.save(petitionText);
                 }
             }
         }
