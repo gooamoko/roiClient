@@ -27,5 +27,8 @@ public class RoiClientApplication implements CommandLineRunner {
 	public void run(String... args) {
 		log.info("Получаем список инициатив на голосовании.");
 		roiService.processPoll();
+
+		log.info("обрабатываем список устаревших инициатив.");
+		roiService.processOld();
 	}
 }

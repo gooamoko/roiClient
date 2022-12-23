@@ -13,6 +13,7 @@ import ru.gooamoko.roiClient.model.PetitionModel;
 import ru.gooamoko.roiClient.model.StatusModel;
 import ru.gooamoko.roiClient.repository.PetitionRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,16 +50,36 @@ public class RestRoiService implements RoiService {
                     log.info(petitionText);
                     roiServiceClient.save(petitionText);
                 }
+            } else {
+                // Инициатива уже есть. Просто обновим дату
+                PetitionEntity entity = optionalEntity.get();
+                entity.setUpdateTimestamp(LocalDateTime.now());
+                repository.save(entity);
             }
         }
         log.info("Добавлено инициатив в БД: {}.", recordsAdded);
     }
 
+    @Override
+    public void processOld() {
+        LocalDateTime dateTime = LocalDateTime.now().minusDays(7);
+        List<PetitionEntity> oldEntities = repository.getOldPetitions(dateTime);
+        if (oldEntities == null || oldEntities.isEmpty()) {
+            return;
+        }
+
+        for (PetitionEntity entity : oldEntities) {
+            roiServiceClient.deleteById(entity.getId());
+            repository.delete(entity);
+        }
+    }
+
+
     private PetitionEntity createEntity(PetitionModel model) {
         PetitionEntity entity = new PetitionEntity();
         entity.setId(model.getId());
         entity.setTitle(model.getTitle());
-        entity.setProcessed(false);
+        entity.setUpdateTimestamp(LocalDateTime.now());
         LevelModel level = model.getLevel();
         if (level != null) {
             entity.setLevelId(level.getId().intValue());

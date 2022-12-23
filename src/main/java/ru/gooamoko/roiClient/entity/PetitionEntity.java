@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "PETITIONS")
@@ -22,8 +23,8 @@ public class PetitionEntity {
     @Column(name = "PET_STATUS_ID", nullable = false)
     private int statusId;
 
-    @Column(name = "PET_PROCESSED", nullable = false)
-    private boolean processed;
+    @Column(name = "PET_UPDATE_TIMESTAMP", nullable = false)
+    private LocalDateTime updateTimestamp;
 
     public Long getId() {
         return id;
@@ -57,11 +58,11 @@ public class PetitionEntity {
         this.statusId = statusId;
     }
 
-    public boolean isProcessed() {
-        return processed;
+    public LocalDateTime getUpdateTimestamp() {
+        return updateTimestamp;
     }
 
-    public void setProcessed(boolean processed) {
-        this.processed = processed;
+    public void setUpdateTimestamp(LocalDateTime updateTimestamp) {
+        this.updateTimestamp = updateTimestamp;
     }
 }
