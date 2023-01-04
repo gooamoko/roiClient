@@ -1,8 +1,8 @@
 package ru.gooamoko.roiClient.client;
 
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -13,8 +13,8 @@ public interface RoiServiceClient {
 
     @RequestMapping(method = RequestMethod.POST, value = "save",
             consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
-    HttpEntity<String> save(@RequestBody String petitionDocument);
+    ResponseEntity<String> save(@RequestBody String petitionDocument);
 
     @RequestMapping(method = RequestMethod.GET, value = "delete")
-    void deleteById(@RequestParam("id") Long id);
+    ResponseEntity<String> deleteById(@RequestParam("id") Long id);
 }
